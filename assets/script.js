@@ -23,24 +23,52 @@ const arrowRight = document.getElementById("arrow_right");
 
 let i = 0;
 
-let bannerImage = document.getElementById("banner_image");
-let bannerParagraph = document.getElementById("banner_paragraph");
-let dot = document.getElementsByClassName(".dot");
+const bannerImage = document.getElementById("banner_image");
+const bannerParagraph = document.getElementById("banner_paragraph");
+const dotsContainer = document.querySelector(".dots");
 
+function createDot() {
+	slides.forEach((slide, index) => {
+		let dot = document.createElement("div");
+		dot.classList.add("dot");
+		if (index === 0) dot.classList.add("dot_selected");
+
+		dot.addEventListener("click", function() {
+			changeSlideTo(index)
+		});
+		dotsContainer.appendChild(dot);
+	});
+};
+
+function updateDots() {
+	let dots = document.querySelectorAll(".dot");
+	dots.forEach((dot, index) => {
+		dot.classList.toggle("dot_selected", index === i);
+	});
+};
 
 function changeSlide(direction) {
 	i = i + direction;
 
 	if (i > slides.length - 1) {
 		i = 0;
-	} if (i < 0) {
+	};
+	if (i < 0) {
 		i = slides.length - 1;
 	};
 
 	bannerImage.src = "./assets/images/slideshow/" + slides[i].image;
-	//bannerParagraph.innerHTML = slides[i].tagLine;	
+	bannerParagraph.innerHTML = slides[i].tagLine;
+	updateDots();
 };
 
+function changeSlideTo(index) {
+	i = index;
+
+	bannerImage.src = "./assets/images/slideshow/" + slides[i].image;
+	bannerParagraph.innerHTML = slides[i].tagLine;
+	updateDots();
+};
 
 arrowLeft.addEventListener("click", function() {
 	changeSlide(-1);
@@ -48,3 +76,5 @@ arrowLeft.addEventListener("click", function() {
 arrowRight.addEventListener("click", function() {
 	changeSlide(1);
 });
+
+createDot();
